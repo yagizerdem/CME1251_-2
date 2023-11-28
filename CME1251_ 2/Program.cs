@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Data;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace CME1251__2
 {
@@ -83,7 +84,7 @@ namespace CME1251__2
         public static int Score = 0;
         public static DateTime timer = DateTime.Now.AddSeconds(2);
         public static int DecreaseCounter = 15;
-        public static int NextGenCounter = 5;
+        public static int NextGenCounter = 60;
         static void Main(string[] args)
         {
             while (Healt > 0)
@@ -191,7 +192,11 @@ namespace CME1251__2
                                     for (int i = 1; i <= count; i++)
                                     {
                                         string num = queue.Dequeue();
-                                        if (matrix[cy - i, cx] == "#") break;
+                                        if (matrix[cy - i, cx] == "#")
+                                        {
+                                            Score += num == "0" ? 20 : Convert.ToInt32(num);
+                                            break;
+                                        }
                                         else
                                         {
                                             matrix[cy - i, cx] = num;
@@ -199,6 +204,7 @@ namespace CME1251__2
                                             Console.Write(num);
                                         }
                                     }
+                                    UpdateUI(60, 3, "Score : " + Score + "    ");
                                 }
 
                             }
@@ -218,7 +224,11 @@ namespace CME1251__2
                                     for (int i = 1; i <= count; i++)
                                     {
                                         string num = queue.Dequeue();
-                                        if (matrix[cy + i, cx] == "#") break;
+                                        if (matrix[cy + i, cx] == "#")
+                                        {
+                                            Score += num == "0" ? 20 : Convert.ToInt32(num);
+                                            break;
+                                        }
                                         else
                                         {
                                             matrix[cy + i, cx] = num;
@@ -226,6 +236,7 @@ namespace CME1251__2
                                             Console.Write(num);
                                         }
                                     }
+                                    UpdateUI(60, 3, "Score : " + Score + "    ");
                                 }
                             }
                             else if (lastDirection == lastDirectionType.left)
@@ -244,7 +255,11 @@ namespace CME1251__2
                                     for (int i = 1; i <= count; i++)
                                     {
                                         string num = queue.Dequeue();
-                                        if (matrix[cy, cx - i] == "#") break;
+                                        if (matrix[cy, cx - i] == "#")
+                                        {
+                                            Score += num == "0" ? 20 : Convert.ToInt32(num);
+                                            break;
+                                        }
                                         else
                                         {
                                             matrix[cy, cx - i] = num;
@@ -252,6 +267,7 @@ namespace CME1251__2
                                             Console.Write(num);
                                         }
                                     }
+                                    UpdateUI(60, 3, "Score : " + Score + "    ");
                                 }
 
                             }
@@ -271,7 +287,12 @@ namespace CME1251__2
                                     for (int i = 1; i <= count; i++)
                                     {
                                         string num = queue.Dequeue();
-                                        if (matrix[cy, cx + i] == "#") break;
+
+                                        if (matrix[cy, cx + i] == "#") 
+                                        {
+                                            Score += num == "0" ? 20 : Convert.ToInt32(num);
+                                            break;
+                                        }
                                         else
                                         {
                                             matrix[cy, cx + i] = num;
@@ -279,6 +300,7 @@ namespace CME1251__2
                                             Console.Write(num);
                                         }
                                     }
+                                    UpdateUI(60, 3, "Score : " + Score + "    ");
                                 }
 
 
@@ -311,12 +333,12 @@ namespace CME1251__2
                         if (DecreaseCounter == -1)
                         {
                             DecreaseCounter = 15;
-                            //DecreaseValuesByone();
+                            DecreaseValuesByone();
                         };
                         if(NextGenCounter == -1)
                         {
                             AddExtraNumber();
-                            NextGenCounter = 5;
+                            NextGenCounter = 60;
                         }
 
                         PrintRightMenu();
@@ -326,8 +348,10 @@ namespace CME1251__2
                 }
             }
 
+            // ending 
             Console.Clear();
             Console.WriteLine("game endend");
+            Console.WriteLine("your score :" + Score);
         }
 
         public static void Init()
