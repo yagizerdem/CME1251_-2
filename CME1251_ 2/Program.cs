@@ -13,7 +13,7 @@ namespace CME1251__2
         public static Random random = new Random();
         public static int cx = 1; 
         public static int cy = 1;
-        public static string[] number_list = new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+        public static string[] number_list = new string[] { "0" ,"1", "2", "3", "4", "5", "6", "7", "8", "9" };
         public struct  walltypes
         {
             public static string[,] horizontal_small_wall = new string[3, 5]{ 
@@ -69,6 +69,8 @@ namespace CME1251__2
             };
         }
 
+        public static DateTime Aimovetimer = DateTime.Now.AddSeconds(2);
+
         public enum lastDirectionType
         {
             left = 0, right = 1,
@@ -83,7 +85,6 @@ namespace CME1251__2
             // game loop
             while (true)
             {
-                
                 if (Console.KeyAvailable)
                 {
                     bool flag = false;
@@ -254,12 +255,13 @@ namespace CME1251__2
                     }
                     PrintP();
                 }
-
+                if(Aimovetimer <= DateTime.Now)
+                {
+                    Moveallzero();
+                    Aimovetimer = DateTime.Now.AddSeconds(2);
+                }
                 
             }
-
-           
-
         }
 
         public static void Init()
@@ -401,7 +403,7 @@ namespace CME1251__2
                 int y = random.Next(1, 21);
                 if (matrix[y,x] == " ")
                 {
-                    matrix[y,x] = random.Next(1, 10).ToString();
+                    matrix[y,x] = random.Next(0, 10).ToString();
                     coutner++;
                 }
             }
@@ -487,6 +489,11 @@ namespace CME1251__2
             return true;
         }
 
+        public static bool ChecksquareEmpty(int cy , int cx)
+        {
+            if (matrix[cy, cx] == " ") return true;
+            return false;
+        }
         public static bool IsDescanding(Queue<string> queue)
         {
             bool flag = true;
@@ -511,6 +518,37 @@ namespace CME1251__2
             return flag;
         }
 
+        public static void Moveallzero()
+        {
+            List<int[]> list = new List<int[]>();
+            for (int i = 0; i < 23; i++)
+            {
+                for (int j = 0; j < 53; j++)
+                {
+                    if (matrix[i, j] == "0")
+                    {
+                        list.Add(new int[] { i, j });
+                    }
+                }
+            }
+            foreach (var item in list)
+            {
+                int y = item[0] + random.Next(-1,2);
+                int x = item[1] + random.Next(-1, 2);
+                if (ChecksquareEmpty(y, x))
+                {
+                    matrix[item[0], item[1]] = " ";
+                    matrix[y, x] = "0";
+                    Console.SetCursorPosition(item[1], item[0]);
+                    Console.Write(" ");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.SetCursorPosition(x, y);
+                    Console.Write("0");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+
+            }
+        }
 
     }
 }
