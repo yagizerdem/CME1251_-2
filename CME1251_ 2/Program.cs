@@ -5,7 +5,7 @@ namespace CME1251__2
 {
     internal class Program
     {
-        // stack 
+        // queue 
         public static Queue<string> queue = new Queue<string>();  
 
         public static string[,] matrix = new string[23 , 53];
@@ -80,9 +80,13 @@ namespace CME1251__2
 
         public static bool isKilled = false;
         public static int Healt = 5;
+        public static int Score = 0;
+        public static DateTime timer = DateTime.Now.AddSeconds(2);
+        public static int DecreaseCounter = 15;
+        public static int NextGenCounter = 60;
         static void Main(string[] args)
         {
-            while(Healt > 0)
+            while (Healt > 0)
             {
                 Init();
                 Console.SetCursorPosition(cx, cy);
@@ -294,11 +298,30 @@ namespace CME1251__2
                     }
                     if (isKilled)
                     {
-                        RoundEndScreen();
                         isKilled = false;
                         Healt--;
+                        RoundEndScreen();
                         break;
                     }
+                    if(DateTime.Now >= timer)
+                    {
+                        timer = DateTime.Now.AddSeconds(1);
+                        DecreaseCounter--;
+                        NextGenCounter--;
+                        if (DecreaseCounter == -1)
+                        {
+                            DecreaseCounter = 15;
+                            DecreaseValuesByone();
+                        };
+                        if(NextGenCounter == -1)
+                        {
+                            NextGenCounter = 60;
+                        }
+
+                        PrintRightMenu();
+                    }
+
+
                 }
             }
 
@@ -309,6 +332,8 @@ namespace CME1251__2
         public static void Init()
         {
             Console.Clear();// clearing previous games trash
+            PrintRightMenu();
+            Console.SetCursorPosition(0, 0);
             // board
             CreateBorder();
             CreateObstacle();
@@ -611,12 +636,66 @@ namespace CME1251__2
             return false;
         }
 
+        // Decrease Values By 1
+        public static void DecreaseValuesByone()
+        {
+            for (int i = 1; i < 23; i++)
+            {
+                for (int j = 1; j < 53; j++)
+                {
+                    if (number_list.Contains(matrix[i, j]))
+                    {
+                        int value = Convert.ToInt32(matrix[i,j]);
+
+                        if (value > 1)
+                        {
+                            value--;
+                        }
+                        else if (value == 1)
+                        {
+                            if (random.Next(0, 3) == 1) value--;
+                        }
+                        matrix[i, j] = value.ToString();
+                        Console.SetCursorPosition(j, i);
+                        if(value == 0) Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write(value.ToString());
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    
+                }
+            }
+        }
+
+        // adding extra Numbers
+        public static void AddExtraNumber()
+        {
+
+        }
+
         // utility 
         public static void RoundEndScreen()
         {
             Console.Clear();
             Console.WriteLine("collide wiht number 0");
             Console.ReadKey();
+        }
+
+        public static void PrintRightMenu()
+        {
+            Console.SetCursorPosition(60, 2);
+            Console.Write("Helat : " + Healt+"     ");
+            Console.SetCursorPosition(60, 3);
+            Console.Write("Score : " + Score+"    ");
+            Console.SetCursorPosition(60, 4);
+            Console.Write("Decrese Timer : "+ DecreaseCounter+"   ");
+            Console.SetCursorPosition(60, 5);
+            Console.Write("NextGenTimer : "+ NextGenCounter+"   ");
+        }
+        public static void UpdateUI(int x , int y , string input)
+        {
+            Console.SetCursorPosition(x, y);
+            Console.Write(input);
+            Console.SetCursorPosition((int)cx, (int)cy);  
         }
     }
 }
