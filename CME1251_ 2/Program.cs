@@ -78,68 +78,100 @@ namespace CME1251__2
         }
         public static lastDirectionType lastDirection;
 
+        public static bool isKilled = false;
+        public static int Healt = 5;
         static void Main(string[] args)
         {
-            Init();
-            Console.SetCursorPosition(cx, cy);
-            // game loop
-            while (true)
+            while(Healt > 3)
             {
-                if (Console.KeyAvailable)
+                Init();
+                Console.SetCursorPosition(cx, cy);
+                // game loop
+                while (true)
                 {
-                    bool flag = false;
-                    ConsoleKeyInfo ckey = Console.ReadKey();
-                    if (ckey.Key == ConsoleKey.UpArrow && CheckWall(cy -1 , cx))
+                    if (Console.KeyAvailable)
                     {
-                        ClearP();
-                        flag= CollectUp(cy);
-                        lastDirection = lastDirectionType.top;
-                        cy--;
-                    }
-                    else if (ckey.Key == ConsoleKey.RightArrow && CheckWall(cy , cx + 1))
-                    {
-                        ClearP();
-                        flag = CollectRight(cx);
-                        lastDirection = lastDirectionType.right;
-                        cx++;
-                    }
-                    else if (ckey.Key == ConsoleKey.DownArrow && CheckWall(cy + 1, cx))
-                    {
-                        ClearP();
-                        flag = CollectDown(cy);
-                        lastDirection = lastDirectionType.bottom;
-                        cy++;
-                    }
-                    else if (ckey.Key == ConsoleKey.LeftArrow && CheckWall(cy, cx -1))
-                    {
-                        ClearP();
-                        flag = CollectLeft(cx);
-                        lastDirection = lastDirectionType.left;
-                        cx--;
-                    }
-                    if (flag)
-                    {
-                        if (!IsDescanding(queue))
+                        bool flag = false;
+                        ConsoleKeyInfo ckey = Console.ReadKey();
+                        if (ckey.Key == ConsoleKey.UpArrow && CheckWall(cy - 1, cx))
                         {
-                            if (lastDirection == lastDirectionType.right)
+                            if (IsDead(cy - 1, cx))
                             {
-                                cx--;
+                                isKilled = false;
+                                Healt--;
+                                RoundEndScreen();
+                                break;
                             }
-                            else if (lastDirection == lastDirectionType.left)
-                            {
-                                cx++;
-                            }
-                            else if (lastDirection == lastDirectionType.top)
-                            {
-                                cy++;
-                            }
-                            else if (lastDirection == lastDirectionType.bottom)
-                            {
-                                cy--;
-                            }
+                            ClearP();
+                            flag = CollectUp(cy);
+                            lastDirection = lastDirectionType.top;
+                            cy--;
                         }
+                        else if (ckey.Key == ConsoleKey.RightArrow && CheckWall(cy, cx + 1))
+                        {
+                            if (IsDead(cy, cx + 1))
+                            {
+                                isKilled = false;
+                                Healt--;
+                                RoundEndScreen();
+                                break;
+                            }
+                            ClearP();
+                            flag = CollectRight(cx);
+                            lastDirection = lastDirectionType.right;
+                            cx++;
+                        }
+                        else if (ckey.Key == ConsoleKey.DownArrow && CheckWall(cy + 1, cx))
+                        {
+                            if (IsDead(cy + 1, cx))
+                            {
+                                isKilled = false;
+                                Healt--;
+                                RoundEndScreen();
+                                break;
+                            }
+                            ClearP();
+                            flag = CollectDown(cy);
+                            lastDirection = lastDirectionType.bottom;
+                            cy++;
+                        }
+                        else if (ckey.Key == ConsoleKey.LeftArrow && CheckWall(cy, cx - 1))
+                        {
+                            if (IsDead(cy, cx - 1))
+                            {
+                                isKilled = false;
+                                Healt--;
+                                RoundEndScreen();
+                                break;
+                            }
+                            ClearP();
+                            flag = CollectLeft(cx);
+                            lastDirection = lastDirectionType.left;
+                            cx--;
+                        }
+                        if (flag)
+                        {
+                            if (!IsDescanding(queue))
+                            {
+                                if (lastDirection == lastDirectionType.right)
+                                {
+                                    cx--;
+                                }
+                                else if (lastDirection == lastDirectionType.left)
+                                {
+                                    cx++;
+                                }
+                                else if (lastDirection == lastDirectionType.top)
+                                {
+                                    cy++;
+                                }
+                                else if (lastDirection == lastDirectionType.bottom)
+                                {
+                                    cy--;
+                                }
+                            }
 
-                        if (lastDirection == lastDirectionType.top)
+                            if (lastDirection == lastDirectionType.top)
                             {
                                 int count = queue.Count();
                                 if (count == 1 && matrix[cy - 1, cx] == "#")
@@ -166,7 +198,7 @@ namespace CME1251__2
                                 }
 
                             }
-                        else if (lastDirection == lastDirectionType.bottom)
+                            else if (lastDirection == lastDirectionType.bottom)
                             {
                                 int count = queue.Count();
                                 if (count == 1 && matrix[cy + 1, cx] == "#")
@@ -192,7 +224,7 @@ namespace CME1251__2
                                     }
                                 }
                             }
-                        else if (lastDirection == lastDirectionType.left)
+                            else if (lastDirection == lastDirectionType.left)
                             {
                                 int count = queue.Count();
                                 if (count == 1 && matrix[cy, cx - 1] == "#")
@@ -219,7 +251,7 @@ namespace CME1251__2
                                 }
 
                             }
-                        else if (lastDirection == lastDirectionType.right)
+                            else if (lastDirection == lastDirectionType.right)
                             {
                                 int count = queue.Count();
                                 if (count == 1 && matrix[cy, cx + 1] == "#")
@@ -247,25 +279,36 @@ namespace CME1251__2
 
 
                             }
-                        
 
 
 
-                        queue = new Queue<string> ();
+
+                            queue = new Queue<string>();
+                        }
+                        PrintP();
                     }
-                    PrintP();
+                    if (Aimovetimer <= DateTime.Now)
+                    {
+                        Moveallzero();
+                        Aimovetimer = DateTime.Now.AddSeconds(2);
+                    }
+                    if (isKilled)
+                    {
+                        RoundEndScreen();
+                        isKilled = false;
+                        Healt--;
+                        break;
+                    }
                 }
-                if(Aimovetimer <= DateTime.Now)
-                {
-                    Moveallzero();
-                    Aimovetimer = DateTime.Now.AddSeconds(2);
-                }
-                
             }
+
+            Console.Clear();
+            Console.WriteLine("game endend");
         }
 
         public static void Init()
         {
+            Console.Clear();// clearing previous games trash
             // board
             CreateBorder();
             CreateObstacle();
@@ -489,9 +532,9 @@ namespace CME1251__2
             return true;
         }
 
-        public static bool ChecksquareEmpty(int cy , int cx)
+        public static bool ChecksquareEmpty(int cy , int cx , bool for_ai = false)
         {
-            if (matrix[cy, cx] == " ") return true;
+            if (matrix[cy, cx] == " " || matrix[cy, cx] == "P") return true;
             return false;
         }
         public static bool IsDescanding(Queue<string> queue)
@@ -537,6 +580,11 @@ namespace CME1251__2
                 int x = item[1] + random.Next(-1, 2);
                 if (ChecksquareEmpty(y, x))
                 {
+                    if(IsAiKillPlayer(y, x))
+                    {
+                        isKilled = true;
+                        return;
+                    }
                     matrix[item[0], item[1]] = " ";
                     matrix[y, x] = "0";
                     Console.SetCursorPosition(item[1], item[0]);
@@ -550,5 +598,25 @@ namespace CME1251__2
             }
         }
 
+        // check collide wiht 0
+        public static bool IsDead(int cy , int cx)
+        {
+            if (matrix[cy, cx] == "0") return true;
+            return false;
+        }
+        // chekc collide with P
+        public static bool IsAiKillPlayer(int cy, int cx)
+        {
+            if (matrix[cy, cx] == "P") return true;
+            return false;
+        }
+
+        // utility 
+        public static void RoundEndScreen()
+        {
+            Console.Clear();
+            Console.WriteLine("collide wiht number 0");
+            Console.ReadKey();
+        }
     }
 }
