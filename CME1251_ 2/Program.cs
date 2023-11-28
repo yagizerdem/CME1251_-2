@@ -83,7 +83,7 @@ namespace CME1251__2
         public static int Score = 0;
         public static DateTime timer = DateTime.Now.AddSeconds(2);
         public static int DecreaseCounter = 15;
-        public static int NextGenCounter = 60;
+        public static int NextGenCounter = 5;
         static void Main(string[] args)
         {
             while (Healt > 0)
@@ -311,11 +311,12 @@ namespace CME1251__2
                         if (DecreaseCounter == -1)
                         {
                             DecreaseCounter = 15;
-                            DecreaseValuesByone();
+                            //DecreaseValuesByone();
                         };
                         if(NextGenCounter == -1)
                         {
-                            NextGenCounter = 60;
+                            AddExtraNumber();
+                            NextGenCounter = 5;
                         }
 
                         PrintRightMenu();
@@ -669,6 +670,30 @@ namespace CME1251__2
         // adding extra Numbers
         public static void AddExtraNumber()
         {
+            int number_count = 0;
+            for (int i = 1; i < 23; i++)
+                for (int j = 0; j < 53; j++)
+                    if (number_list.Contains(matrix[i, j]))number_count++;
+
+            
+            while(number_count < 70)
+            {
+                string num = random.Next(0, 10).ToString();
+                int x = random.Next(1,52) , y = random.Next(1,22);
+
+                while (CheckIsSquareEmpty(y, x))
+                {
+                     x = random.Next(1, 52);
+                     y = random.Next(1, 22);
+                }
+                matrix[y,x] = num;
+                if (num == 0.ToString())
+                    Console.ForegroundColor = ConsoleColor.Red;
+                Console.SetCursorPosition(x, y);
+                Console.Write(num);
+                number_count++;
+                Console.ForegroundColor = ConsoleColor.White;   
+            }
 
         }
 
