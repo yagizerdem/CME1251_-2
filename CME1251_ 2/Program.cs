@@ -82,7 +82,7 @@ namespace CME1251__2
         public static int Healt = 5;
         static void Main(string[] args)
         {
-            while(Healt > 3)
+            while(Healt > 0)
             {
                 Init();
                 Console.SetCursorPosition(cx, cy);
