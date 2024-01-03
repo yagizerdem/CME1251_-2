@@ -1,0 +1,132 @@
+*{
+  margin: 0;
+  padding:0;
+  box-sizing: border-box;
+}
+body{
+  background: rgb(12 12 12);
+}
+.top-navbar{
+  display: block;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-content: center;
+  position: fixed;
+  background: rgb(65, 63, 63);
+  height: 70px;
+}
+.top-navbar > ul{
+  list-style-type: none;
+  float: right;
+} 
+.top-navbar > ul >li{
+  display: inline;
+
+}
+.top-navbar > ul > li > button{
+  width: 300px;
+  height: 50px;
+  background: #0f2027; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #0f2027, #203a43, #2c5364); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364); 
+  color:#fff;
+  font-weight: bolder;
+  font-size: 30px;
+  margin: 10px;
+}
+
+.card{
+  width: 400px;
+  height: 400px;
+  border: 10px solid black;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50% ,-50%);
+  background: #dbaeae;
+  border-radius: 20px;
+  padding:20px;
+  z-index: 10;
+}
+.card > .center >form{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.center button{
+  display: block;
+  width: 200px;
+  height: 30px;
+}
+.center form label ,.center form button {
+  margin-top: 50px;
+}
+.center form label{
+  font-size: 20px;
+  font-weight: bolder;
+}
+.center form > input{
+  height: 30px;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #FFF;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  }
+
+  @keyframes rotation {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+  } 
+
+  .screen{
+    width: 700px;
+    height: 400px;
+    background: #fff;
+    position: absolute;
+    margin-top: 100px;
+    left: 50%;
+    margin-left: -350px;
+    overflow-y:scroll;
+  }
+
+  @media (max-width: 670px) {
+    .top-navbar > ul >li {
+      display: block;
+    }
+    .top-navbar{
+      height: 140px;
+      justify-content: center;
+    }
+    .screen{
+      margin-top: 200px;
+      width: 300px;
+      margin-left: -150px;
+    }
+  }
+
+.closelogin{
+    width: 50px !important;
+    height: 50px !important;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+    border-radius: 50%;
+    background: black;
+  }
+  svg{
+    fill: #fff;
+  }
